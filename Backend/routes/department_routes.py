@@ -34,7 +34,7 @@ def add_department():
     
     # Validate required fields
     required_fields = ['name']
-    missing = [field for field in required_fields if field not in data]
+    missing = [field for field in required_fields if field not in data or not data[field]]
     if missing:
         return jsonify({'error': f'Missing fields: {", ".join(missing)}'}), 400
 
@@ -56,7 +56,7 @@ def add_department():
         cursor.close()
         db.close()
 
-    return jsonify({'message': 'Department added successfully', 'department_id': department_id}), 201
+    return jsonify({'message': 'Department added successfully', 'id': department_id , 'name': data['name']}), 201
 
 @department_bp.route('/', methods=['PUT'])
 def update_department():

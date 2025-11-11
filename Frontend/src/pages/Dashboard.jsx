@@ -1,15 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Dashboard() {
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+
+    const fetchStats = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:5000/api/stats");
+        const data = await response.json();
+        setStats(data);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (!stats) return <div className="p-6 text-gray-600">Loading dashboard...</div>;
+
   const cards = [
-    { title: "Departments", value: "12", color: "bg-blue-500", link: "/departments" },
-    { title: "Students", value: "1240", color: "bg-green-500", link: "/students" },
-    { title: "Exams", value: "5", color: "bg-yellow-500", link: "/examination" },
-    { title: "Placements", value: "300", color: "bg-purple-500", link: "/placement" },
-    { title: "Staff", value: "120", color: "bg-red-500", link: "/staff" },
-    { title: "Scholarships", value: "45", color: "bg-teal-500", link: "/scholarship" },
-    { title: "Hostel", value: "4 Blocks", color: "bg-indigo-500", link: "/hostel" },
-    { title: "Library", value: "50k Books", color: "bg-pink-500", link: "/library" },
+    { title: "Departments", value: stats.departments, color: "bg-blue-500", link: "/departments" },
+    { title: "Students", value: stats.students, color: "bg-green-500", link: "/students" },
+    { title: "Exams", value: stats.exams, color: "bg-yellow-500", link: "/examination" },
+    { title: "Placements", value: stats.placements, color: "bg-purple-500", link: "/placement" },
+    { title: "Staff", value: stats.staff, color: "bg-red-500", link: "/staff" },
+    { title: "Scholarships", value: stats.scholarships, color: "bg-teal-500", link: "/scholarship" },
+    { title: "Hostel", value: stats.hostels + " Blocks", color: "bg-indigo-500", link: "/hostel" },
+    { title: "Library", value: stats.library_books.toLocaleString() + " Books", color: "bg-pink-500", link: "/library" },
   ];
 
   return (
