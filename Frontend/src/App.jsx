@@ -8,6 +8,8 @@ import AddDepartment from "./pages/AddDepartment";
 import ViewDepartments from "./pages/ViewDepartments";
 import AddStudents from "./pages/AddStudents";
 import ViewStudents from "./pages/ViewStudents";
+import AddPlacement from "./pages/AddPlacement";
+import ViewPlacement from "./pages/ViewPlacement";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/students" element={<Students />} />
         <Route path="/students/add" element={<AddStudents />} />
         <Route path="/students/view" element={<ViewStudents />} />
+        <Route path="/placement/add" element={<AddPlacement />} />
+        <Route path="/placement/view" element={<ViewPlacement />} />
       </Routes>
     </div>
     <Footer />
