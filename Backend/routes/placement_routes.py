@@ -19,6 +19,7 @@ def get_placement():
     try:
         cursor.execute("SELECT * FROM placements")
         data = cursor.fetchall()
+        print(data)
         if not data:
             return jsonify({'error': 'No data found'}), 404
     except mysql.connector.Error as err:
@@ -31,6 +32,7 @@ def get_placement():
 @placement_bp.route('/', methods=['POST'])
 def add_placement():
     data = request.get_json()
+    print(data)
     # Validate required fields
     required_fields = ["course_id","total_students","total_placed","median_salary","average_salary","male","female","other","year"]
     missing = [field for field in required_fields if field not in data]
@@ -45,7 +47,7 @@ def add_placement():
             (course_id,total_students,total_placed,median_salary,average_salary,male,female,other,year)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """, (
-            data['course_id'],data['total_students'],data['total_placed'],data['median_salary'],data['average_salary'],data['male'],data['demale'],data['other'],data['year']
+            data['course_id'],data['total_students'],data['total_placed'],data['median_salary'],data['average_salary'],data['male'],data['female'],data['other'],data['year']
         ))
         db.commit()
         course_id = cursor.lastrowid
