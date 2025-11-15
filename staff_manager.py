@@ -1,8 +1,7 @@
-# staff_manager.py
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
-app = Flask(_name_)
+app = Flask(__name__)
 DB_NAME = "non_teaching_staff.db"
 
 def init_db():
@@ -11,7 +10,7 @@ def init_db():
     c.execute('''
         CREATE TABLE IF NOT EXISTS staff (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            sno INTEGER, staff_type TEXT, group TEXT, sanctioned INTEGER, category TEXT,
+            sno INTEGER, staff_type TEXT, staff_group TEXT, sanctioned INTEGER, category TEXT,
             general_male INTEGER, general_female INTEGER, general_trans INTEGER,
             ews_male INTEGER, ews_female INTEGER, ews_trans INTEGER,
             sc_male INTEGER, sc_female INTEGER, sc_trans INTEGER,
@@ -28,7 +27,7 @@ def init_db():
 def index():
     if request.method == 'POST':
         data = {k: request.form.get(k, '0') for k in [
-            'sno', 'staff_type', 'group', 'sanctioned', 'category',
+            'sno', 'staff_type', 'staff_group', 'sanctioned', 'category',
             'general_male', 'general_female', 'general_trans',
             'ews_male', 'ews_female', 'ews_trans',
             'sc_male', 'sc_female', 'sc_trans',
@@ -37,14 +36,19 @@ def index():
             'total_male', 'total_female', 'total_trans',
             'pwd', 'muslim', 'minority', 'other_minority'
         ]}
-        data = {k: int(v) if v.isdigit() else v for k, v in data.items()}
+        def to_int_or_str(v):
+            try:
+                return int(v)
+            except ValueError:
+                return v
+        data = {k: to_int_or_str(v) for k, v in data.items()}
 
         conn = sqlite3.connect(DB_NAME)
         c = conn.cursor()
         c.execute('''
-            INSERT INTO staff VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            INSERT INTO staff VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ''', (
-            data['sno'], data['staff_type'], data['group'], data['sanctioned'], data['category'],
+            data['sno'], data['staff_type'], data['staff_group'], data['sanctioned'], data['category'],
             data['general_male'], data['general_female'], data['general_trans'],
             data['ews_male'], data['ews_female'], data['ews_trans'],
             data['sc_male'], data['sc_female'], data['sc_trans'],
@@ -64,6 +68,6 @@ def index():
     conn.close()
     return render_template('index.html', records=records)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     init_db()
     app.run(debug=True)
